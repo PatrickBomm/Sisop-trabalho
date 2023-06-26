@@ -16,13 +16,13 @@ public class MemoryTranslator {
 
         if (pageIndex < 0 || pageIndex >= pageTable.length) {
             // Index da pagina invalido
-            System.out.println("Invalid page index: " + pageIndex);
+            System.out.println("Index da pagina invalido: " + pageIndex);
             return -1;
         }
 
         if (pageTable[pageIndex] < 0) {
-            // Numero do frame fisico inválido
-            System.out.println("Invalid physical frame number for page: " + pageIndex);
+            // Numero do frame fisico invalido
+            System.out.println("Numero do frame fisico invalido: " + pageIndex);
             return -1;
         }
 

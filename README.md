@@ -41,27 +41,22 @@ Gerente de processos
 
 Para criar um programa deve-se utilizar o comando "criar" e o nome do programa que deseja criar um processos, separado
 espaço, como no exemplo:
-![img.png](img.png)
+![criacao.png](criacao.png)
+![paInput.png](paInput.png)
 
 Desse forma, um processo será criado no processControlBlock e será devolvido o id desse processo. Em seguida, pode-se
 utilizar o comando listaProcessos para que a lista de processos, já criados, seja printada na tela, com seus respectivos status.
 
-![img_1.png](img_1.png)
-
-Além disso, com um processo já criado, pode-se fazer a execução dele, utilizando o comando "executa" mais o id do processo que
-deseja que seja executado.
-
-![img_2.png](img_2.png)
+![listaProcessos.png](listaProcessos.png)
 
 Utilizando a instrução "dump" mais o id do processo, é listado o conteúdo do PCB e o conteúdo da partição da memória do processo
 com essa id.
 
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
+![dump.png](dump.png)
 
-A instrução "dumpM" mais um número de início e um de fim, lista a memória entre essas posições.
+Para desalocar um processo do PCB, utiliza-se a instrução "desaloca" e o id do processo desejado 
 
-![img_5.png](img_5.png)
+![desaloca.png](desaloca.png)
 
-Para desalocar um processo do PCB, utiliza-se a instrução "desaloca" e o id do processo desejado e para finalizar o programa,
+E para finalizar o programa,
 basta utilizar o comando "exit".
