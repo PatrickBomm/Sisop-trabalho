@@ -36,16 +36,6 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 ##############################
-## IntelliJ
-##############################
-out/
-.idea/
-.idea_modules/
-*.iml
-*.ipr
-*.iws
-
-##############################
 ## Eclipse
 ##############################
 .settings/

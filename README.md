@@ -47,7 +47,7 @@ espaço, como no exemplo:
 Desse forma, um processo será criado no processControlBlock e será devolvido o id desse processo. Em seguida, pode-se
 utilizar o comando listaProcessos para que a lista de processos, já criados, seja printada na tela, com seus respectivos status.
 
-![listaProcessos.png](listaProcessos.png)
+![listaprocessos.png](listaprocessos.png)
 
 Utilizando a instrução "dump" mais o id do processo, é listado o conteúdo do PCB e o conteúdo da partição da memória do processo
 com essa id.
