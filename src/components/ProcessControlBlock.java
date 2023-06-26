@@ -12,6 +12,8 @@ public class ProcessControlBlock {
 
     int[] registers;
 
+    int clockCount;
+
     ProcessStatus processStatus;
 
     public ProcessControlBlock(int id, int[] pageTable, ProcessStatus processStatus, int pc, int[] registers) {
@@ -22,12 +24,24 @@ public class ProcessControlBlock {
         this.registers = registers;
     }
 
+    public int getClockCount() {
+        return clockCount;
+    }
+
+    public void setClockCount(int clockCount) {
+        this.clockCount = clockCount;
+    }
+
     public int getId() {
         return id;
     }
 
     public int[] getPageTable() {
         return pageTable;
+    }
+
+    public int getPc() {
+        return pc;
     }
 
     public ProcessStatus getProcessStatus() {
@@ -56,7 +70,6 @@ public class ProcessControlBlock {
 
     @Override
     public String toString() {
-        return id + "\t\t | " + pc + "\t | " + processStatus + "\t | " + Arrays.toString(pageTable) + "\t\t\t | "
-                + Arrays.toString(registers);
+        return id + "\t\t | " + pc + "\t | " + processStatus + "\t | " + Arrays.toString(pageTable) + "\t\t\t | " + Arrays.toString(registers);
     }
 }

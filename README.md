@@ -4,57 +4,64 @@ Integrantes do grupo:Patrick Bomm e Lucas Barros
 
 Limitações:
 
-- a memória ainda não é protegida por contexto, então não há proteção de acessp para os programas e nem switch para o
-  modo kernel
-- não há processo de escalonamento nem multiprogramação no sentido de que um processo roda até o fim e os pedidos de IO
-  não o bloqueiam nem rodam outro processo
-- apesar de uso de paginação, não há memória virtual e lazy/eager loading com uso de interrupção page fault
+A memória ainda não é protegida por contexto, portanto não há proteção de acesso para os programas e nem switch para o
+modo kernel.
+
+Não há processo de escalonamento nem multiprogramação no sentido de que um processo roda até o fim e os pedidos de E/S
+não o bloqueiam nem executam outro processo.
+
+Apesar de uso de paginação, não há memória virtual e carregamento preguiçoso (lazy) ou antecipado (eager) com uso de interrupção de falta de página (page fault).
 
 ## Introdução
+Para compilar o código, é necessário ter o JDK instalado em sua máquina e um compilador de sua escolha.
 
-Para fazer a compilação do código, é preciso ter instalado o JDK em sua máquina e um compilador a escolha.
+## JDK
+Utilizamos o JDK Java 19.
 
-# JDK
-
-Nós utilizamos o JDK java 19
-
-## Para rodar o projeto
-
-Para executar o código, primeiro enrte no arquivo src pelo comando de cd e execute o arquivo Main.java.
+## Executando o projeto
+Para executar o código, primeiro navegue até o diretório "src" utilizando o comando cd e em seguida compile o arquivo Shell.java.
 
 ```
 cd src
-javac Main.java
+javac Shell.java
 ```
 
-após isto, run the project with:
+Após isto, rode o projeto com:
 
 ```
-java Main
+java Shell
 ```
 
 ## Seção de Programas
-
-Das entregas solicitadas foram implementados:
-
-- [x] Gerente de memória com paginação
-- [x] Gerente de processos
+Implementadas:
+Gerente de memória com paginação
+Gerente de processos
 
 ## Seção Saídas
 
 Para criar um programa deve-se utilizar o comando "criar" e o nome do programa que deseja criar um processos, separado
-espaço.
+espaço, como no exemplo:
+![img.png](img.png)
 
 Desse forma, um processo será criado no processControlBlock e será devolvido o id desse processo. Em seguida, pode-se
 utilizar o comando listaProcessos para que a lista de processos, já criados, seja printada na tela, com seus respectivos status.
 
+![img_1.png](img_1.png)
+
 Além disso, com um processo já criado, pode-se fazer a execução dele, utilizando o comando "executa" mais o id do processo que
 deseja que seja executado.
+
+![img_2.png](img_2.png)
 
 Utilizando a instrução "dump" mais o id do processo, é listado o conteúdo do PCB e o conteúdo da partição da memória do processo
 com essa id.
 
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
+
 A instrução "dumpM" mais um número de início e um de fim, lista a memória entre essas posições.
+
+![img_5.png](img_5.png)
 
 Para desalocar um processo do PCB, utiliza-se a instrução "desaloca" e o id do processo desejado e para finalizar o programa,
 basta utilizar o comando "exit".

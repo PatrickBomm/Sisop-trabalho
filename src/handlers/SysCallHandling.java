@@ -1,41 +1,42 @@
 package handlers;
 
-import components.VM;
-import domain.Interrupts;
-import domain.Opcode;
-import domain.Word;
-
-import java.util.Scanner;
+import components.*;
+import domain.*;
 
 public class SysCallHandling {
-    private VM vm;
 
-    public void setVM(VM _vm) {
-        vm = _vm;
+    private final CPU cpu;
+    private final ProcessManager processManager;
+
+    public SysCallHandling(CPU cpu) {
+        this.cpu = cpu;
+        this.processManager = ProcessManager.getInstance();
     }
 
-    public void handle() { // apenas avisa - todas interrupcoes neste momento finalizam o programa
-        int operacao = vm.cpu.registers[8];
-        int enderecoMemoria = vm.cpu.registers[9];
+    public void handle(ProcessControlBlock pcb) {   // apenas avisa - todas interrupcoes neste momento finalizam o programa
+        int operation = cpu.registers[8];
+        int memoryAddress = cpu.registers[9];
 
-        if (vm.cpu.canAccessMemory(enderecoMemoria)) {
-            if (operacao == 1) {
-                // leitura
-                Scanner teclado = new Scanner(System.in);
-                System.out.println("(aguardando entrada do teclado)");
-                int resultado = teclado.nextInt();
-                vm.mem.memoryArray[enderecoMemoria] = new Word(Opcode.DATA, -1, -1, resultado);
+        if (operation != 1 && operation != 2) {
+            cpu.interrupt = Interrupts.intInstrucaoInvalida;
+            return;
+        }
 
-            } else if (operacao == 2) {
-                // escrita
-                Word resultado = vm.mem.memoryArray[enderecoMemoria];
-                System.out.println(resultado.p);
-            } else {
-                vm.cpu.interrupt = Interrupts.intInstrucaoInvalida;
+        if (cpu.canAccessMemory(memoryAddress)) {
+            // requeriu IO, entrando para fila de bloqueados
+            pcb.setProcessStatus(ProcessStatus.BLOCKED);
+            processManager.blockedProcessControlBlocks.add(pcb);
+
+            // pedir IO
+            IOType requestType = operation == 1 ? IOType.READ : IOType.WRITE;
+            IORequest request = new IORequest(requestType, memoryAddress);
+            Console.requests.add(request);
+            Console.consoleSemaphore.release();
+
+            if (Scheduler.schedulerSemaphore.availablePermits() == 0 && !processManager.readyProcessControlBlocks.isEmpty()) {
+                Scheduler.schedulerSemaphore.release();
             }
         }
-        System.out.println(
-                "           Chamada de components.Sistema com op  /  par:  "
-                        + vm.cpu.registers[8] + " / " + vm.cpu.registers[9]);
+        System.out.println("                                               Chamada de components.Sistema com op  /  par:  " + cpu.registers[8] + " / " + cpu.registers[9]);
     }
 }

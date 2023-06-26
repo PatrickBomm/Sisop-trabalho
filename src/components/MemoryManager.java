@@ -34,11 +34,10 @@ public class MemoryManager {
         return true;
     }
 
-    // cada posição i do vetor de saída “pagesTable” informa em que frame a página i
-    // deve ser hospedada
+    // cada posição i do vetor de saída “pagesTable” informa em que frame a página i deve ser hospedada
     public void deallocate(int[] pagesTable) {
         for (int frame : pagesTable) {
-            for (int j = getStartFrame(frame, memory.pageSize); j < getEndFrame(frame, memory.pageSize); j++) {
+            for (int j = getStartFrame(frame, memory.pageSize); j <= getEndFrame(frame, memory.pageSize); j++) {
                 desallocatePosition(j);
             }
             framesAvailable[frame] = true;
@@ -49,8 +48,7 @@ public class MemoryManager {
     private int countAvailableFrames() {
         int count = 0;
         for (boolean frame : framesAvailable) {
-            if (frame)
-                count++;
+            if (frame) count++;
         }
         return count;
     }

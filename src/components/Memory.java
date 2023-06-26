@@ -9,7 +9,7 @@ public class Memory {
     public int pageSize;
 
     public int numberOfFrames;
-    public Word[] memoryArray; // m representa a memória fisica: um array de posicoes de memoria (word)
+    public Word[] memoryArray;                  // m representa a memória fisica:   um array de posicoes de memoria (word)
 
     public Memory(int size, int pageSize) {
         memorySize = size;
@@ -21,7 +21,7 @@ public class Memory {
         }
     }
 
-    public void dump(Word w) { // funcoes de DUMP nao existem em hardware - colocadas aqui para facilidade
+    public void dump(Word w) {        // funcoes de DUMP nao existem em hardware - colocadas aqui para facilidade
         System.out.print("[ ");
         System.out.print(w.opCode);
         System.out.print(", ");
@@ -41,3 +41,5 @@ public class Memory {
         }
     }
 }
+
+ 

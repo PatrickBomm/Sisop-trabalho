@@ -1,24 +1,29 @@
 package components;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.Semaphore;
 
-public class Scheduler {
-    private Queue<ProcessControlBlock> readyQueue;
+public class Scheduler extends Thread {
+
+    public static Semaphore schedulerSemaphore = new Semaphore(0);
+
+    private final ProcessManager processManager;
 
     public Scheduler() {
-        readyQueue = new LinkedList<>();
+        this.processManager = ProcessManager.getInstance();
     }
 
-    public void addProcess(ProcessControlBlock pcb) {
-        readyQueue.add(pcb);
-    }
-
-    public ProcessControlBlock getNextProcess() {
-        return readyQueue.poll();
-    }
-
-    public boolean hasProcesses() {
-        return !readyQueue.isEmpty();
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                schedulerSemaphore.acquire();
+                ProcessControlBlock next = processManager.readyProcessControlBlocks.poll();
+                assert next != null;
+                CPU.setCurrentProcess(next);
+                CPU.execSemaphore.release();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
