@@ -135,6 +135,11 @@ public class CPU extends Thread {
 
                     case STD: // [A] ← Rs
                         physicalAddress = translate(ir.p, pcb.getPageTable(), mem.pageSize);
+                        if(physicalAddress == -1){
+                            interrupt = Interrupts.intEnderecoInvalido;
+                            pcb.setProcessStatus(ProcessStatus.BLOCKED);
+                            break;
+                        }
                         if (canAccessMemory(physicalAddress)) {
                             memoryArray[physicalAddress].opCode = Opcode.DATA;
                             memoryArray[physicalAddress].p = registers[ir.r1];
