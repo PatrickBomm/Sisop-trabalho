@@ -200,7 +200,7 @@ public class Main {
 
     scheduler.addProcess(processControlBlock);
 
-    if (runningProcess == null && scheduler.hasProcesses()) {
+    if (runningProcess != null && scheduler.hasProcesses()) {
         runningProcess = scheduler.getNextProcess();
         System.out.println("Processo " + runningProcess.getId() + " iniciado");
         sistema.exec(runningProcess);
