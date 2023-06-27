@@ -15,17 +15,19 @@ public class CPU extends Thread {
     private int maxInt; // valores maximo e minimo para inteiros nesta cpu
     private int minInt;
     // característica do processador: contexto da components.CPU ...
-    private int pc;            // ... composto de program counter,
-    private Word ir;            // instruction register,
-    public int[] registers;        // registradores da components.CPU
-    public Interrupts interrupt;    // durante instrucao, interrupcao pode ser sinalizada
+    private int pc; // ... composto de program counter,
+    private Word ir; // instruction register,
+    public int[] registers; // registradores da components.CPU
+    public Interrupts interrupt; // durante instrucao, interrupcao pode ser sinalizada
 
-    private Memory mem;               // mem tem funcoes de dump e o array m de memória 'fisica'
-    private Word[] memoryArray;                 // components.CPU acessa MEMORIA, guarda referencia a 'm'. m nao muda. semre será um array de palavras
+    private Memory mem; // mem tem funcoes de dump e o array m de memória 'fisica'
+    private Word[] memoryArray; // components.CPU acessa MEMORIA, guarda referencia a 'm'. m nao muda. semre
+                                // será um array de palavras
 
-    private InterruptHandling interruptHandling;     // significa desvio para rotinas de tratamento de  Int - se int ligada, desvia
-    private SysCallHandling sysCall;  // significa desvio para tratamento de chamadas de sistema - trap
-    private static boolean debug;            // se true entao mostra cada instrucao em execucao
+    private InterruptHandling interruptHandling; // significa desvio para rotinas de tratamento de Int - se int ligada,
+                                                 // desvia
+    private SysCallHandling sysCall; // significa desvio para tratamento de chamadas de sistema - trap
+    private static boolean debug; // se true entao mostra cada instrucao em execucao
     private final int CLOCK;
 
     private int clockCycles;
@@ -34,15 +36,15 @@ public class CPU extends Thread {
 
     private static ProcessControlBlock currentProcess;
 
-    public CPU(Memory _mem, boolean _debug) {     // ref a MEMORIA e interrupt handler passada na criacao da components.CPU
-        maxInt = 32767;        // capacidade de representacao modelada
-        minInt = -32767;        // se exceder deve gerar interrupcao de overflow
-        mem = _mem;                // usa mem para acessar funcoes auxiliares (dump)
-        memoryArray = mem.memoryArray;                // usa o atributo 'm' para acessar a memoria.
-        registers = new int[10];        // aloca o espaço dos registradores - regs 8 e 9 usados somente para IO
+    public CPU(Memory _mem, boolean _debug) { // ref a MEMORIA e interrupt handler passada na criacao da components.CPU
+        maxInt = 32767; // capacidade de representacao modelada
+        minInt = -32767; // se exceder deve gerar interrupcao de overflow
+        mem = _mem; // usa mem para acessar funcoes auxiliares (dump)
+        memoryArray = mem.memoryArray; // usa o atributo 'm' para acessar a memoria.
+        registers = new int[10]; // aloca o espaço dos registradores - regs 8 e 9 usados somente para IO
         interruptHandling = new InterruptHandling(this);
         sysCall = new SysCallHandling(this);
-        debug = _debug;        // se true, print da instrucao em execucao
+        debug = _debug; // se true, print da instrucao em execucao
         CLOCK = 5;
     }
 
@@ -67,13 +69,13 @@ public class CPU extends Thread {
         currentProcess = pcb;
     }
 
-    public boolean canAccessMemory(int e) {                             // todo acesso a memoria tem que ser verificado
+    public boolean canAccessMemory(int e) { // todo acesso a memoria tem que ser verificado
         boolean enderecoDeMemoriaCorreto = e < mem.memorySize && e >= 0;
         interrupt = enderecoDeMemoriaCorreto ? interrupt : Interrupts.intEnderecoInvalido;
         return enderecoDeMemoriaCorreto;
     }
 
-    private boolean testOverflow(int v) {                       // toda operacao matematica deve avaliar se ocorre overflow
+    private boolean testOverflow(int v) { // toda operacao matematica deve avaliar se ocorre overflow
         if ((v < minInt) || (v > maxInt)) {
             interrupt = Interrupts.intOverflow;
             return false;
@@ -81,9 +83,9 @@ public class CPU extends Thread {
         return true;
     }
 
-    public void setContext(int _pc, int[] registers) {  // no futuro esta funcao vai ter que ser
-        pc = _pc;                                              // limite e pc (deve ser zero nesta versao)
-        interrupt = Interrupts.noInterrupt;                         // reset da interrupcao registrada
+    public void setContext(int _pc, int[] registers) { // no futuro esta funcao vai ter que ser
+        pc = _pc; // limite e pc (deve ser zero nesta versao)
+        interrupt = Interrupts.noInterrupt; // reset da interrupcao registrada
         this.registers = registers;
     }
 
@@ -93,23 +95,24 @@ public class CPU extends Thread {
         if (debug) {
             System.out.println("        executando programa " + pcb.getId());
         }
-        // execucao da components.CPU supoe que o contexto da components.CPU, vide acima, esta devidamente setado
-        while (true) {            // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
-//            sleep para criar tempo para inputs
-            Thread.sleep(2500);
+        // execucao da components.CPU supoe que o contexto da components.CPU, vide
+        // acima, esta devidamente setado
+        while (true) { // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
             // --------------------------------------------------------------------------------------------------
             // FETCH
+            Thread.sleep(50);
             physicalAddress = translate(pc, pcb.getPageTable(), mem.pageSize);
             clockCycles++;
-            if (canAccessMemory(physicalAddress)) {    // pc valido
-                ir = memoryArray[physicalAddress];    // <<<<<<<<<<<<           busca posicao da memoria apontada por pc, guarda em ir
+            if (canAccessMemory(physicalAddress)) { // pc valido
+                ir = memoryArray[physicalAddress]; // <<<<<<<<<<<< busca posicao da memoria apontada por pc, guarda em
+                                                   // ir
                 if (debug) {
                     System.out.print("                               pc: " + pc + "       exec: ");
                     mem.dump(ir);
                 }
                 // --------------------------------------------------------------------------------------------------
                 // EXECUTA INSTRUCAO NO ir
-                switch (ir.opCode) {   // conforme o opcode (código de operação) executa
+                switch (ir.opCode) { // conforme o opcode (código de operação) executa
 
                     // Instrucoes de Busca e Armazenamento em Memoria
                     case LDI: // Rd ← k
@@ -119,9 +122,11 @@ public class CPU extends Thread {
 
                     case LDD: // Rd <- [A]
                         physicalAddress = translate(ir.p, pcb.getPageTable(), mem.pageSize);
-                        if (canAccessMemory(physicalAddress)) {
+                        if (physicalAddress != -1 && canAccessMemory(physicalAddress)) {
                             registers[ir.r1] = memoryArray[physicalAddress].p;
                             pc++;
+                        } else {
+                            pcb.setProcessStatus(ProcessStatus.FINISHED);
                         }
                         break;
 
@@ -135,17 +140,11 @@ public class CPU extends Thread {
 
                     case STD: // [A] ← Rs
                         physicalAddress = translate(ir.p, pcb.getPageTable(), mem.pageSize);
-                        if(physicalAddress == -1){
-                            interrupt = Interrupts.intEnderecoInvalido;
-                            pcb.setProcessStatus(ProcessStatus.BLOCKED);
-                            break;
-                        }
                         if (canAccessMemory(physicalAddress)) {
                             memoryArray[physicalAddress].opCode = Opcode.DATA;
                             memoryArray[physicalAddress].p = registers[ir.r1];
                             pc++;
                         }
-                        ;
                         break;
 
                     case STX: // [Rd] ←Rs
@@ -155,7 +154,6 @@ public class CPU extends Thread {
                             memoryArray[physicalR1].p = registers[ir.r2];
                             pc++;
                         }
-                        ;
                         break;
 
                     case MOVE: // RD <- RS
@@ -231,7 +229,6 @@ public class CPU extends Thread {
                         }
                         break;
 
-
                     case JMPIL: // if Rc < 0 then PC <- Rs Else PC <- PC +1
                         if (registers[ir.r2] < 0) {
                             pc = registers[ir.r1];
@@ -299,7 +296,8 @@ public class CPU extends Thread {
 
                     // Chamada de sistema
                     case TRAP:
-                        sysCall.handle(pcb);            // <<<<< aqui desvia para rotina de chamada de sistema, no momento so temos IO
+                        sysCall.handle(pcb); // <<<<< aqui desvia para rotina de chamada de sistema, no momento so temos
+                                             // IO
                         pc++;
                         interrupt = Interrupts.ioRequest;
                         this.updatePCB(pcb, clockCycles);
@@ -313,14 +311,15 @@ public class CPU extends Thread {
                 if (clockCycles == CLOCK) {
                     interrupt = Interrupts.clockInterrupt;
                 }
-                if (checkInterruption(pcb)) break;// break sai do loop da cpu
+                if (checkInterruption(pcb))
+                    break;// break sai do loop da cpu
             }
 
-        }  // FIM DO CICLO DE UMA INSTRUÇÃO
+        } // FIM DO CICLO DE UMA INSTRUÇÃO
     }
 
     public boolean checkInterruption(ProcessControlBlock pcb) {
-        if (interrupt != Interrupts.noInterrupt) {   // existe interrupção
+        if (interrupt != Interrupts.noInterrupt) { // existe interrupção
             interruptHandling.handle(interrupt, pc, pcb); // desvia para rotina de tratamento
             if (interrupt == Interrupts.ioPronto) {
                 interrupt = Interrupts.noInterrupt;
@@ -336,11 +335,11 @@ public class CPU extends Thread {
         pcb.setRegisters(registers.clone());
         pcb.setPc(pc);
         pcb.setClockCount(clockCycles);
-//        TODO: logs
-//        System.out.println("PC: " + pc);
-//        for (int i = 0; i < registers.length; i++) {
-//            System.out.println("Registrador " + i + ": " + registers[i]);
-//        }
+        // TODO: logs
+        // System.out.println("PC: " + pc);
+        // for (int i = 0; i < registers.length; i++) {
+        // System.out.println("Registrador " + i + ": " + registers[i]);
+        // }
     }
 
     public void resetClockCycles() {
@@ -355,5 +354,5 @@ public class CPU extends Thread {
         debug = value;
     }
 }
-// ------------------ C P U - fim ------------------------------------------------------------------------
-  
+// ------------------ C P U - fim
+// ------------------------------------------------------------------------

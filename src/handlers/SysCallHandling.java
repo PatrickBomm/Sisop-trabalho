@@ -17,11 +17,6 @@ public class SysCallHandling {
         int operation = cpu.registers[8];
         int memoryAddress = cpu.registers[9];
 
-        if (operation != 1 && operation != 2) {
-            cpu.interrupt = Interrupts.intInstrucaoInvalida;
-            return;
-        }
-
         if (cpu.canAccessMemory(memoryAddress)) {
             // requeriu IO, entrando para fila de bloqueados
             pcb.setProcessStatus(ProcessStatus.BLOCKED);

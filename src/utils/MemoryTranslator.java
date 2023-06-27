@@ -13,10 +13,8 @@ public class MemoryTranslator {
     public static int translate(int logicalAddress, int[] pageTable, int pageSize) {
         int pageIndex = logicalAddress / pageSize;
         int offset = logicalAddress % pageSize;
-        if (pageIndex >= pageTable.length) {
-            System.out.println("Erro de acesso a memória");
-            return -1;
-        }
+        if (pageIndex < 0 || pageIndex >= pageTable.length) 
+            return -1; // ou outro valor de retorno adequado
         return getStartFrame(pageTable[pageIndex], pageSize) + offset;
     }
 }

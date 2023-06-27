@@ -23,6 +23,7 @@ public class InterruptHandling {
             case clockInterrupt -> handleClock(pc, pcb);
             case intSTOP -> handleStop(pc, pcb);
             case ioPronto -> handleIoPronto();
+            default -> pcb.setProcessStatus(ProcessStatus.FINISHED);
         }
     }
 
