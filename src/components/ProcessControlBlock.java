@@ -9,19 +9,20 @@ public class ProcessControlBlock {
     int[] pageTable;
 
     int pc;
-
+    String name;
     int[] registers;
 
     int clockCount;
 
     ProcessStatus processStatus;
 
-    public ProcessControlBlock(int id, int[] pageTable, ProcessStatus processStatus, int pc, int[] registers) {
+    public ProcessControlBlock(int id, int[] pageTable, ProcessStatus processStatus, int pc, int[] registers, String name) {
         this.id = id;
         this.pageTable = pageTable;
         this.processStatus = processStatus;
         this.pc = pc;
         this.registers = registers;
+        this.name = name;
     }
 
     public int getClockCount() {
@@ -46,6 +47,10 @@ public class ProcessControlBlock {
 
     public ProcessStatus getProcessStatus() {
         return processStatus;
+    }
+
+    public String getName() {
+        return "Processo: " + name;
     }
 
     public void setId(int id) {

@@ -23,6 +23,8 @@ public class InterruptHandling {
             case clockInterrupt -> handleClock(pc, pcb);
             case intSTOP -> handleStop(pc, pcb);
             case ioPronto -> handleIoPronto();
+            case ioRequest -> handleIoRequest(pcb);
+            case intEnderecoInvalido -> continueCode(pcb);
             default -> pcb.setProcessStatus(ProcessStatus.FINISHED);
         }
     }
@@ -54,6 +56,21 @@ public class InterruptHandling {
         this.processManager.deallocate(pcb);
         if (Scheduler.schedulerSemaphore.availablePermits() == 0 && !processManager.readyProcessControlBlocks.isEmpty()) {
             Scheduler.schedulerSemaphore.release();
+        }
+    }
+
+    public void handleIoRequest(ProcessControlBlock pcb) {
+        return;
+    }
+
+    public void continueCode(ProcessControlBlock pcb) {
+        pcb.setProcessStatus(ProcessStatus.FINISHED);
+        if (!processManager.allLoadedProcessControlBlocks.isEmpty()) {
+            ProcessControlBlock processControlBlock = processManager.allLoadedProcessControlBlocks.get(0);
+            processControlBlock.setProcessStatus(ProcessStatus.READY);
+            Scheduler.schedulerSemaphore.release();
+        } else {
+            System.out.println("Nenhum processo carregado.");
         }
     }
 }

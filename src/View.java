@@ -115,15 +115,15 @@ public class View extends Thread {
     static int cria(String nomePrograma) {
         Programas programas = new Programas();
         ProcessControlBlock processControlBlock = switch (nomePrograma) {
-            case "fatorial" -> processManager.loadProgram(programas.fatorial);
-            case "progMinimo" -> processManager.loadProgram(programas.progMinimo);
-            case "fibonacci10" -> processManager.loadProgram(programas.fibonacci10);
-            case "fatorialTRAP" -> processManager.loadProgram(programas.fatorialTRAP);
-            case "fibonacciTRAP" -> processManager.loadProgram(programas.fibonacciTRAP);
-            case "PB" -> processManager.loadProgram(programas.PB);
-            case "PC" -> processManager.loadProgram(programas.PC);
-            case "paInput" -> processManager.loadProgram(programas.paInput);
-            case "pbOutput" -> processManager.loadProgram(programas.pbOutput);
+            case "fatorial" -> processManager.loadProgram(programas.fatorial, "fatorial");
+            case "progMinimo" -> processManager.loadProgram(programas.progMinimo, "progMinimo");
+            case "fibonacci10" -> processManager.loadProgram(programas.fibonacci10, "fibonacci10");
+            case "fatorialTRAP" -> processManager.loadProgram(programas.fatorialTRAP, "fatorialTRAP");
+            case "fibonacciTRAP" -> processManager.loadProgram(programas.fibonacciTRAP, "fibonacciTRAP");
+            case "PB" -> processManager.loadProgram(programas.PB, "PB");
+            case "PC" -> processManager.loadProgram(programas.PC, "PC");
+            case "paInput" -> processManager.loadProgram(programas.paInput, "paInput");
+            case "pbOutput" -> processManager.loadProgram(programas.pbOutput, "pbOutput");
             default -> null;
         };
 
@@ -153,7 +153,7 @@ public class View extends Thread {
         System.out.println("\nID \t| Status dos processos");
         System.out.println(processManager.allLoadedProcessControlBlocks.size() + " processos carregados");
         processManager.allLoadedProcessControlBlocks
-                .forEach(p -> System.out.println(p.getId() + "\t| " + p.getProcessStatus()));
+                .forEach(p -> System.out.println(p.getId() + "\t| " + p.getProcessStatus() + "\t| " + p.getName()));
     }
 
     static void dump(int processId) {

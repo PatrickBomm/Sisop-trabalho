@@ -47,7 +47,7 @@ public class ProcessManager {
         return processId++;
     }
 
-    public ProcessControlBlock loadProgram(Word[] p) {
+    public ProcessControlBlock loadProgram(Word[] p, String name) {
         int neededFrames = Math.ceilDiv(p.length, VM.mem.pageSize);
         int[] pageTable = new int[neededFrames];
         boolean canLoad = this.memoryManager.allocate(p.length, pageTable);
@@ -65,7 +65,7 @@ public class ProcessManager {
             VM.mem.memoryArray[physicalAddress].p = p[i].p;
         }
 
-        ProcessControlBlock processControlBlock = new ProcessControlBlock(nextProcessId(), pageTable, ProcessStatus.READY, 0, new int[10]);
+        ProcessControlBlock processControlBlock = new ProcessControlBlock(nextProcessId(), pageTable, ProcessStatus.READY, 0, new int[10], name);
         this.allLoadedProcessControlBlocks.add(processControlBlock);
         this.readyProcessControlBlocks.add(processControlBlock);
         return processControlBlock;
